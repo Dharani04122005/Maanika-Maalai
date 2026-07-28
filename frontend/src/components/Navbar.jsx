@@ -1,39 +1,77 @@
 import { Link } from "react-router-dom";
+import {
+  FiSearch,
+  FiHeart,
+  FiShoppingCart,
+  FiUser,
+} from "react-icons/fi";
 
 function Navbar() {
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+    <header className="sticky top-0 z-50 bg-[#faeefa] border-b border-[#E7D3A5]">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
 
-        <h1 className="text-3xl font-bold text-emerald-700">
-          🌸 Maanikamaalai
-        </h1>
+        {/* Logo */}
+        <Link to="/" className="flex flex-col">
+          <h1 className="text-3xl font-bold text-[#7A1F3D] tracking-wide">
+            MAANIKAMAALAI
+          </h1>
 
-        <ul className="flex gap-8 text-gray-700 font-medium">
+          <span className="text-xs text-[#C9A227] tracking-[3px] uppercase">
+            Traditional Floral Heritage
+          </span>
+        </Link>
 
-          <li>
-            <Link to="/">Home</Link>
-          </li>
+        {/* Menu */}
+       <nav className="hidden md:flex items-center gap-3 text-[16px] font-medium">
 
-          <li>
-            <Link to="/shop">Shop</Link>
-          </li>
+  <Link
+    to="/"
+    className="px-5 py-2 rounded-full text-[#3B2A24] hover:bg-[#7A1F3D] hover:text-white transition-all duration-300"
+  >
+    Home
+  </Link>
 
-          <li>
-            <Link to="/about">About</Link>
-          </li>
+  <Link
+    to="/shop"
+    className="px-5 py-2 rounded-full text-[#3B2A24] hover:bg-[#7A1F3D] hover:text-white transition-all duration-300"
+  >
+    Shop
+  </Link>
 
-          <li>
-            <Link to="/contact">Contact</Link>
-          </li>
+  <Link
+    to="/about"
+    className="px-5 py-2 rounded-full text-[#3B2A24] hover:bg-[#7A1F3D] hover:text-white transition-all duration-300"
+  >
+    About
+  </Link>
 
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
+  <Link
+    to="/contact"
+    className="px-5 py-2 rounded-full text-[#3B2A24] hover:bg-[#7A1F3D] hover:text-white transition-all duration-300"
+  >
+    Contact
+  </Link>
 
-        </ul>
+</nav>
+
+        {/* Icons */}
+       <div className="hidden md:flex items-center gap-5 text-2xl text-[#7A1F3D]">
+
+          <FiSearch className="cursor-pointer hover:text-[#C9A227] hover:scale-110 transition-all duration-300" />
+
+<FiHeart className="cursor-pointer hover:text-[#C9A227] hover:scale-110 transition-all duration-300" />
+
+<FiShoppingCart className="cursor-pointer hover:text-[#C9A227] hover:scale-110 transition-all duration-300" />
+
+<Link to="/login">
+  <FiUser className="cursor-pointer hover:text-[#C9A227] hover:scale-110 transition-all duration-300" />
+</Link>
+
+        </div>
+
       </div>
-    </nav>
+    </header>
   );
 }
 

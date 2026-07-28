@@ -1,5 +1,7 @@
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
+import Collections from "../components/Collections";
+import WhyChoose from "../components/WhyChoose";
 
 function Home() {
   return (
@@ -7,6 +9,7 @@ function Home() {
       <Navbar />
       <Hero />
       <Collections />
+      <WhyChoose />
     </>
   );
 }

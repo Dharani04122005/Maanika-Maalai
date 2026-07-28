@@ -1,55 +1,98 @@
-import heroImage from "../assets/images/hero/hero.jpeg";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import { motion } from "framer-motion";
+
+import "swiper/css";
+
+import hero from "../assets/images/hero/hero.jpeg";
+import img1 from "../assets/images/hero/img1.jpeg";
+import img3 from "../assets/images/hero/img3.jpeg";
+import img4 from "../assets/images/hero/img4.jpeg";
+
+import Petals from "./Petals";
+
+const images = [hero, img1, img3, img4];
 
 function Hero() {
   return (
-    <section className="bg-gradient-to-r from-rose-50 to-emerald-50 min-h-screen flex items-center">
-      <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center">
+    <section className="relative overflow-hidden bg-[#FAF4EE] min-h-screen flex items-center">
 
-        {/* Left Side */}
+      {/* Falling Petals */}
+      <Petals />
 
-        <div>
+      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center">
 
-          <p className="text-pink-600 font-semibold text-lg">
-            🌸 Welcome to Maanikamaalai
+        {/* Left Content */}
+        <motion.div
+          initial={{ opacity: 0, x: -80 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+          className="relative z-20"
+        >
+          <p className="uppercase tracking-[8px] text-[#C9A227] text-sm font-medium mb-5">
+            Traditional Floral Heritage
           </p>
 
-          <h1 className="text-5xl font-bold text-emerald-800 mt-4 leading-tight">
-            Traditional Flower Art
-            <br />
-            Handcrafted with Love
+          <h1 className="text-6xl lg:text-7xl font-bold text-[#7A1F3D] leading-tight">
+            Maanikamaalai
           </h1>
 
-          <p className="mt-6 text-gray-700 text-lg">
-            Premium flower garlands, temple decorations,
-            wedding floral designs and handcrafted floral art
-            made with tradition and elegance.
+          <p className="mt-8 text-[#4B3B35] text-xl leading-10 max-w-xl">
+            Handcrafted flower garlands, temple decorations and wedding floral
+            designs made with tradition, elegance and love.
           </p>
+          <div className="flex flex-wrap gap-4 mt-8">
 
-          <div className="mt-8 flex gap-4">
+  <div className="bg-white px-5 py-3 rounded-full shadow-md border border-[#E8D4A2]">
+    🌸 100% Handmade
+  </div>
 
-            <button className="bg-emerald-700 text-white px-6 py-3 rounded-xl hover:bg-emerald-800 transition">
-              Shop Now
+  <div className="bg-white px-5 py-3 rounded-full shadow-md border border-[#E8D4A2]">
+    🏵 Temple & Wedding Specialist
+  </div>
+
+</div>
+
+          <div className="flex flex-wrap gap-5 mt-10">
+            <button className="bg-[#7A1F3D] text-white px-8 py-4 rounded-full font-medium shadow-lg hover:bg-[#611631] hover:scale-105 transition-all duration-300">
+              Explore Collection
             </button>
 
-            <button className="border-2 border-pink-600 text-pink-600 px-6 py-3 rounded-xl hover:bg-pink-600 hover:text-white transition">
+            <button className="border-2 border-[#7A1F3D] text-[#7A1F3D] px-8 py-4 rounded-full font-medium hover:bg-[#7A1F3D] hover:text-white duration-300 hover:scale-105 shadow-xl">
               Book Decoration
             </button>
-
           </div>
+        </motion.div>
 
-        </div>
-
-        {/* Right Side */}
-
-        <div className="flex justify-center">
-
-          <img
-            src={heroImage}
-            alt="Traditional Flower Decoration"
-            className="rounded-3xl shadow-2xl hover:scale-105 transition duration-500"
-          />
-
-        </div>
+        {/* Right Slider */}
+        <motion.div
+          initial={{ opacity: 0, x: 80 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+          className="relative z-20"
+        >
+          <Swiper
+            modules={[Autoplay]}
+            autoplay={{
+              delay: 3500,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+            className="rounded-[40px] overflow-hidden border-4 border-[#E8D4A2] shadow-[0_20px_60px_rgba(122,31,61,0.18)]"
+          >
+            {images.map((image, index) => (
+              <SwiperSlide key={index}>
+                <div className="overflow-hidden">
+                  <img
+                    src={image}
+                    alt="Flower"
+                    className="w-full h-[450px] object-cover object-center transition-transform duration-700 hover:scale-105"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </motion.div>
 
       </div>
     </section>
