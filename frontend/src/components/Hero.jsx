@@ -27,14 +27,14 @@ function Hero() {
           initial={{ opacity: 0, x: -80 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
-          className="relative z-20"
+          className="relative z-20 w"
         >
           <p className="uppercase tracking-[8px] text-[#C9A227] text-sm font-medium mb-5">
             Traditional Floral Heritage
           </p>
 
           <h1 className="text-6xl lg:text-7xl font-bold text-[#7A1F3D] leading-tight">
-            Maanikamaalai
+            Thovalai Maanikamaalai
           </h1>
 
           <p className="mt-8 text-[#4B3B35] text-xl leading-10 max-w-xl">
