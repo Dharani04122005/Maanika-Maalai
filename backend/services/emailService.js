@@ -1,13 +1,7 @@
 
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const formatOrderItems = (items) =>
   items
@@ -25,6 +19,8 @@ const formatOrderItems = (items) =>
     .join("");
 
 export const sendOrderEmails = async (order) => {
+  const senderEmail = process.env.SENDER_EMAIL;
+
   const ownerEmails = [
     process.env.OWNER_EMAIL_1,
     process.env.OWNER_EMAIL_2,
@@ -68,8 +64,8 @@ export const sendOrderEmails = async (order) => {
 
   const ownerResult = await Promise.allSettled(
     ownerEmails.map((email) =>
-      transporter.sendMail({
-        from: `"Maanikamaalai" <${process.env.MAIL_USER}>`,
+      resend.emails.send({
+        from: senderEmail,
         to: email,
         subject: `New Order - ${order.orderNumber}`,
         html: orderDetails,
@@ -77,8 +73,8 @@ export const sendOrderEmails = async (order) => {
     )
   );
 
-  const customerResult = await transporter.sendMail({
-    from: `"Maanikamaalai" <${process.env.MAIL_USER}>`,
+  const customerResult = await resend.emails.send({
+    from: senderEmail,
     to: order.customer.email,
     subject: `Order Confirmation - ${order.orderNumber}`,
     html: `
