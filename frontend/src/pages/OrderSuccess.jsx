@@ -121,6 +121,38 @@ function OrderSuccess() {
               {" "}{order.address?.state} - {order.address?.pincode}
             </p>
           </div>
+          <div className="mt-6 rounded-xl border border-[#E8D4C3] bg-[#FAF4EE] p-5 text-center">
+  <h3 className="font-serif text-xl font-bold text-[#7A1F3D]">
+    Need Any Help?
+  </h3>
+
+  <p className="mt-2 text-sm text-[#806B65]">
+    Our team will contact you soon to confirm your order.
+    For any enquiries, feel free to contact us.
+  </p>
+
+  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+
+    <a
+      href="tel:+918015627764"
+      className="rounded-lg bg-[#7A1F3D] px-4 py-3 font-bold text-white transition hover:bg-[#A34460]"
+    >
+      ☎ Call Now
+    </a>
+
+    <a
+      href={`https://wa.me/918015627764?text=${encodeURIComponent(
+        `Hello Maanikamaalai, I have an enquiry regarding my order ${order.orderNumber}.`
+      )}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="rounded-lg bg-green-600 px-4 py-3 font-bold text-white transition hover:bg-green-700"
+    >
+      WhatsApp Enquiry
+    </a>
+
+  </div>
+</div>
 
           <button
             onClick={() => navigate("/shop")}
