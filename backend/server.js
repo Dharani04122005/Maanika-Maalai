@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import dns from "node:dns/promises";
 import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => {
   res.send("Maanikamaalai Backend is Running!");

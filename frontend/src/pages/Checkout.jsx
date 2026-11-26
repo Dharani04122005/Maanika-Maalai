@@ -3,19 +3,21 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { API_URL } from "../services/api";
 
-
-// State and District Data
 import {
   getAllStates,
   getDistricts,
 } from "india-state-district";
+
 const states = getAllStates();
 
 function Checkout() {
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const [address, setAddress] = useState({
     fullName: "",
@@ -33,17 +35,23 @@ function Checkout() {
 
   // Load Cart
   useEffect(() => {
-    const savedCart = JSON.parse(
-      localStorage.getItem("cart") || "[]"
-    );
+    try {
+      const savedCart = JSON.parse(
+        localStorage.getItem("cart") || "[]"
+      );
 
-    setCartItems(savedCart);
+      setCartItems(
+        Array.isArray(savedCart) ? savedCart : []
+      );
+    } catch {
+      setCartItems([]);
+    }
   }, []);
 
   // Available Districts
   const availableDistricts = address.state
-  ? getDistricts(address.state)
-  : [];
+    ? getDistricts(address.state)
+    : [];
 
   // Handle Input Changes
   const handleChange = (e) => {
@@ -65,36 +73,36 @@ function Checkout() {
   // Subtotal
   const subtotal = cartItems.reduce(
     (total, item) =>
-      total + item.price * item.quantity,
+      total + Number(item.price) * Number(item.quantity),
     0
   );
 
   // Shipping Calculation
-const getShippingCharge = () => {
-  const district = address.district.trim().toLowerCase();
-  const state = address.state.trim().toLowerCase();
+  const getShippingCharge = () => {
+    const district = address.district.trim().toLowerCase();
+    const state = address.state.trim().toLowerCase();
 
-  if (!district || !state) return 0;
+    if (!district || !state) return 0;
 
-  if (state === "tn") {
-    if (
-      district === "kanyakumari" ||
-      district === "kanniyakumari"
-    ) {
-      return 50;
+    if (state === "tn") {
+      if (
+        district === "kanyakumari" ||
+        district === "kanniyakumari"
+      ) {
+        return 50;
+      }
+
+      return 100;
     }
 
-    return 100;
-  }
+    return 200;
+  };
 
-  return 200;
-};
+  const shipping = getShippingCharge();
+  const total = subtotal + shipping;
 
-const shipping = getShippingCharge();
-const total = subtotal + shipping;
-
-  // Save Checkout Details
-  const handleSubmit = (e) => {
+  // Place Order
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (cartItems.length === 0) {
@@ -108,27 +116,50 @@ const total = subtotal + shipping;
       return;
     }
 
-    const checkoutData = {
-      address,
-      cartItems,
-      subtotal,
-      shipping,
-      total,
-      createdAt: new Date().toISOString(),
-    };
+    setLoading(true);
+    setError("");
 
-    localStorage.setItem(
-      "checkoutData",
-      JSON.stringify(checkoutData)
-    );
+    try {
+      const response = await fetch(`${API_URL}/api/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          address,
+          cartItems,
+        }),
+      });
 
-    alert("Delivery details saved successfully!");
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Unable to place your order."
+        );
+      }
+
+      // Clear cart only after successful order
+     localStorage.setItem("lastOrder", JSON.stringify(data.order));
+
+localStorage.removeItem("cart");
+localStorage.removeItem("checkoutData");
+
+setCartItems([]);
+
+navigate("/order-success");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Input Styling
   const inputClass =
     "w-full rounded-lg border border-[#E8D4C3] bg-white px-3 py-2.5 text-sm text-[#604C47] outline-none transition focus:border-[#7A1F3D]";
 
-  // Normal Input Fields
+  // Input Fields
   const fields = [
     {
       label: "Full Name",
@@ -258,28 +289,32 @@ const total = subtotal + shipping;
 
               {/* State Dropdown */}
               <div>
-  <label className="mb-1.5 block text-xs font-semibold text-[#806B65]">
-    State / Union Territory
-  </label>
+                <label className="mb-1.5 block text-xs font-semibold text-[#806B65]">
+                  State / Union Territory
+                </label>
 
-  <select
-    name="state"
-    value={address.state}
-    onChange={handleStateChange}
-    required
-    className={inputClass}
-  >
-    <option value="">
-      Select State / UT
-    </option>
+                <select
+                  name="state"
+                  value={address.state}
+                  onChange={handleStateChange}
+                  required
+                  className={inputClass}
+                >
+                  <option value="">
+                    Select State / UT
+                  </option>
 
-    {states.map((state) => (
-      <option key={state.code} value={state.code}>
-        {state.name}
-      </option>
-    ))}
-  </select>
-</div>
+                  {states.map((state) => (
+                    <option
+                      key={state.code}
+                      value={state.code}
+                    >
+                      {state.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* District Dropdown */}
               <div>
                 <label className="mb-1.5 block text-xs font-semibold text-[#806B65]">
@@ -336,24 +371,24 @@ const total = subtotal + shipping;
               onClick={() => navigate("/cart")}
               className="mt-5 w-full rounded-lg border border-[#E8D4C3] px-4 py-3 text-sm font-semibold text-[#7A1F3D] transition hover:bg-[#FAF4EE]"
             >
-              ← Back to Cart
+              Back to Cart
             </button>
 
           </div>
 
           {/* Order Summary */}
-          <aside className="rounded-xl border border-[#E8D4C3] bg-white p-5 shadow-sm lg:sticky lg:top-24 lg:col-span-2">
+          <aside className="rounded-xl border border-[#E8D4C3] bg-white p-5 shadow-sm lg:col-span-2">
 
-            <p className="text-xs uppercase tracking-[0.2em] text-[#A67C36]">
-              Your Purchase
-            </p>
-
-            <h2 className="mt-2 font-serif text-xl font-bold text-[#7A1F3D]">
+            <h2 className="font-serif text-xl font-bold text-[#7A1F3D]">
               Order Summary
             </h2>
 
-            {/* Product Items */}
-            <div className="mt-5 max-h-72 space-y-4 overflow-y-auto">
+            <p className="mb-5 mt-1 text-xs text-[#806B65]">
+              Review your selected products.
+            </p>
+
+            {/* Cart Items */}
+            <div className="max-h-80 space-y-3 overflow-y-auto">
 
               {cartItems.length === 0 ? (
                 <p className="py-5 text-center text-sm text-[#806B65]">
@@ -389,7 +424,9 @@ const total = subtotal + shipping;
                     </div>
 
                     <p className="text-sm font-bold text-[#A67C36]">
-                      ₹{(item.price * item.quantity).toLocaleString("en-IN")}
+                      ₹{(
+                        item.price * item.quantity
+                      ).toLocaleString("en-IN")}
                     </p>
 
                   </div>
@@ -429,13 +466,20 @@ const total = subtotal + shipping;
 
             </div>
 
+            {/* Error Message */}
+            {error && (
+              <p className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+                {error}
+              </p>
+            )}
+
             {/* Confirm Order */}
             <button
               type="submit"
-              disabled={cartItems.length === 0}
+              disabled={cartItems.length === 0 || loading}
               className="group mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#7A1F3D] to-[#A34460] px-4 py-3.5 text-sm font-bold text-white shadow-md transition duration-300 hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-40"
             >
-              Confirm Order
+              {loading ? "Placing Order..." : "Confirm Order"}
 
               <span className="transition-transform group-hover:translate-x-1">
                 →

@@ -10,7 +10,7 @@ import Login from "./pages/Login";
 import ProductDetails from "./pages/ProductDetails.jsx";
 import Cart from "./pages/Cart.jsx";
 import Checkout from "./pages/Checkout.jsx";
-
+import OrderSuccess from "./pages/OrderSuccess";
 import { testBackend } from "./services/api";
 
 function App() {
@@ -29,6 +29,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/order-success" element={<OrderSuccess />} />
     </Routes>
   );
 }
