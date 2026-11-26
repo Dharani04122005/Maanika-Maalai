@@ -3,20 +3,29 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+
 const formatOrderItems = (items) =>
   items
     .map(
       (item) => `
         <tr>
-          <td>${item.name}</td>
-          <td>${item.colour}</td>
-          <td>${item.lengthFeet} ft</td>
-          <td>${item.quantity}</td>
-          <td>₹${item.price}</td>
+          <td style="padding:10px;">
+            ${
+              item.image
+                ? `<img src="${item.image}" alt="${item.name}" width="90" style="height:90px;object-fit:contain;border-radius:8px;" />`
+                : "Image unavailable"
+            }
+          </td>
+          <td style="padding:10px;">${item.name}</td>
+          <td style="padding:10px;">${item.colour}</td>
+          <td style="padding:10px;">${item.lengthFeet} ft</td>
+          <td style="padding:10px;">${item.quantity}</td>
+          <td style="padding:10px;">₹${item.price}</td>
         </tr>
       `
     )
     .join("");
+
 
 export const sendOrderEmails = async (order) => {
   const senderEmail = process.env.SENDER_EMAIL;
@@ -48,6 +57,7 @@ export const sendOrderEmails = async (order) => {
     <h3>Products</h3>
     <table border="1" cellpadding="8" cellspacing="0">
       <tr>
+        <th>Photo</th>
         <th>Product</th>
         <th>Colour</th>
         <th>Length</th>
