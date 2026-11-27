@@ -1,11 +1,31 @@
+
 @import "tailwindcss";
-body{
-    margin:0;
-    padding:0;
-    font-family:'Poppins',sans-serif;
-    background:#FAF4EE;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-h1,h2,h3,h4,h5{
-  font-family:'Playfair Display', serif;
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #FAF4EE;
+  overflow-x: clip;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Playfair Display', serif;
+}
+
+img {
+  max-width: 100%;
 }
