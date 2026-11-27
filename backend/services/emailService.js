@@ -1,9 +1,6 @@
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-
 const formatOrderItems = (items) =>
   items
     .map(
@@ -26,8 +23,16 @@ const formatOrderItems = (items) =>
     )
     .join("");
 
-
 export const sendOrderEmails = async (order) => {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY is missing in backend .env");
+  }
+
+  if (!process.env.SENDER_EMAIL) {
+    throw new Error("SENDER_EMAIL is missing in backend .env");
+  }
+
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const senderEmail = process.env.SENDER_EMAIL;
 
   const ownerEmails = [

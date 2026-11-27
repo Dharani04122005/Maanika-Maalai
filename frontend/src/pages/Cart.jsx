@@ -1,8 +1,6 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 function Cart() {
   const navigate = useNavigate();
@@ -42,7 +40,7 @@ function Cart() {
 
   return (
     <>
-      <Navbar />
+      
 
       <div className="min-h-screen bg-[#FAF4EE]">
 
